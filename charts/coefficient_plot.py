@@ -29,6 +29,9 @@ def _validate_data(data: pd.DataFrame, ci_type: str) -> pd.DataFrame:
     if missing:
         raise ValueError(f"数据缺少必要列：{missing}。必须包含：variable, coef")
 
+    if len(data) == 0:
+        raise ValueError("数据为空（0 行），无法绘制系数图")
+
     if ci_type == "95ci" or ci_type == "90ci":
         if "se" not in data.columns and (
             "ci_lower" not in data.columns or "ci_upper" not in data.columns
@@ -53,7 +56,9 @@ def _compute_ci(df: pd.DataFrame, ci_type: str) -> tuple[np.ndarray, np.ndarray]
         raise ValueError("计算 CI 需要 'se' 列")
 
     se = df["se"].values
-    multiplier = CI_MULTIPLIERS.get(ci_type, 1.96)
+    raw_multiplier = CI_MULTIPLIERS.get(ci_type, 1.96)
+    # "95ci" 映射为 None（表示优先用 ci_lower/ci_upper），退化到 se 时按 1.96 处理
+    multiplier = raw_multiplier if raw_multiplier is not None else 1.96
     half = multiplier * se
     return half, half
 

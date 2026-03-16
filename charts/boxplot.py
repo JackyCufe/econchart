@@ -70,7 +70,7 @@ def plot_boxplot(
 
     bp = ax.boxplot(
         plot_data,
-        labels=labels,
+        tick_labels=labels,
         patch_artist=True,
         showfliers=show_outliers,
         flierprops=flier_props,
