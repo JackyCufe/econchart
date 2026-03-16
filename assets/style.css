@@ -1,0 +1,131 @@
+/* EconChart - 样式表（与 EconKit/EconPrep 风格一致） */
+
+/* === 主色调 === */
+:root {
+    --primary: #2C3E50;
+    --primary-light: #3D5166;
+    --accent: #3498DB;
+    --success: #27AE60;
+    --warning: #F39C12;
+    --danger: #E74C3C;
+    --bg-card: #FFFFFF;
+    --bg-page: #F8F9FA;
+    --text-main: #2C3E50;
+    --text-muted: #6C757D;
+    --border: #DEE2E6;
+    --radius: 8px;
+    --shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* === 全局基础 === */
+.stApp {
+    background-color: var(--bg-page);
+    color: var(--text-main);
+}
+
+/* === 防抖动：防止 iframe 高度频繁变化 === */
+.element-container {
+    transition: none !important;
+}
+
+iframe {
+    transition: none !important;
+}
+
+/* === 卡片样式 === */
+.stTabs [data-baseweb="tab-panel"],
+div[data-testid="column"] > div > div {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 1rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 0.5rem;
+}
+
+/* === 主标题 === */
+h1, h2, h3 {
+    color: var(--primary);
+}
+
+/* === 按钮美化 === */
+.stButton > button {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.5rem 1.2rem;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+}
+
+.stButton > button:hover {
+    background-color: var(--primary-light);
+}
+
+/* === 下载按钮 === */
+.stDownloadButton > button {
+    background-color: var(--success);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-weight: 600;
+}
+
+.stDownloadButton > button:hover {
+    background-color: #219A52;
+}
+
+/* === 输入框 === */
+.stTextInput > div > div > input,
+.stTextArea > div > div > textarea,
+.stSelectbox > div > div {
+    border-radius: var(--radius);
+    border-color: var(--border);
+}
+
+.stTextInput > div > div > input:focus,
+.stTextArea > div > div > textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+/* === 标签页 === */
+.stTabs [data-baseweb="tab"] {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.stTabs [data-baseweb="tab"][aria-selected="true"] {
+    color: var(--primary);
+    border-bottom: 2px solid var(--primary);
+}
+
+/* === 分割线 === */
+hr {
+    border-color: var(--border);
+    margin: 1rem 0;
+}
+
+/* === 图表容器 === */
+.stImage img,
+.stPyplot > div > img {
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+/* === 数据表格 === */
+.stDataFrame {
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+/* === 消息框 === */
+.stInfo, .stSuccess, .stWarning, .stError {
+    border-radius: var(--radius);
+}
+
+/* === 侧边栏（折叠状态默认最小化） === */
+.css-1d391kg {
+    display: none;
+}
