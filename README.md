@@ -22,11 +22,21 @@ tags:
 
 **专为中国经管类期刊设计的学术图表美化器**
 
-无需 Stata / R | 一键生成符合投稿规范的高质量图表
+**Academic Chart Beautifier for Chinese Economics & Management Journals**
+
+无需 Stata / R / Origin | 一键生成符合投稿规范的高质量图表
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
 [![Streamlit](https://img.shields.io/badge/Built%20with-Streamlit-red.svg)](https://streamlit.io/)
+[![ModelScope](https://img.shields.io/badge/🤖_Demo-ModelScope-624aff)](https://modelscope.cn/studios/JackyCufe/EconChart)
+
+**🚀 在线体验（无需安装）：**
+
+[![ModelScope](https://img.shields.io/badge/在线Demo-ModelScope（国内推荐）-624aff?style=for-the-badge)](https://modelscope.cn/studios/JackyCufe/EconChart)
+[![HuggingFace](https://img.shields.io/badge/在线Demo-HuggingFace（国际）-orange?style=for-the-badge)](https://huggingface.co/spaces/JackyCufe/EconChart)
+
+适用期刊：经济研究 / 管理世界 / 中国工业经济 / 金融研究 / 经济学季刊
 
 </div>
 
