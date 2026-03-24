@@ -238,6 +238,29 @@ def render_studio():
 
     with col_cfg:
         theme_name = st.selectbox("期刊主题", THEME_NAMES, key="theme_sel")
+
+        # 当前图类型所需数据格式提示
+        FORMAT_HINTS = {
+            "系数图": ("必须包含列：`variable`（变量名）、`coef`（系数）、`se`（标准误）",
+                       "variable,coef,se\nGDP增长率,0.234,0.045\n研发投入,0.187,0.032"),
+            "散点图": ("必须包含列：数值型 X 列、数值型 Y 列（可选分组列）",
+                       "x,y,group\n1.2,2.3,A\n2.1,3.5,B"),
+            "柱状图": ("必须包含列：分类列（X）+ 数值列（Y，可多列）",
+                       "region,gdp,income\n东部,5.2,3.1\n西部,3.8,2.4"),
+            "折线图": ("必须包含列：时间/序号列（X）+ 数值列（Y，可多列）",
+                       "year,gdp,cpi\n2018,6.7,2.1\n2019,6.1,2.9"),
+            "箱线图": ("必须包含列：数值列（可多列）+ 可选分组列",
+                       "score,group\n85,A\n90,B\n78,A"),
+            "热力图": ("必须为纯数值列（相关矩阵）",
+                       "gdp,income,edu\n1.0,0.8,0.6\n0.8,1.0,0.7"),
+            "分布直方图": ("必须包含数值列",
+                           "value\n1.2\n2.3\n3.1"),
+        }
+        hint_text, hint_example = FORMAT_HINTS.get(chart_type, ("", ""))
+        with st.expander("📌 数据格式要求", expanded=False):
+            st.caption(hint_text)
+            st.code(hint_example, language="csv")
+
         st.markdown("---")
         from ui.components.chart_config import render_chart_config
         try:
@@ -276,7 +299,10 @@ def render_studio():
                     use_container_width=True,
                 )
             except ValueError as e:
-                st.warning(f"⚠️ 请完善参数配置：{e}")
+                _, hint_example = FORMAT_HINTS.get(chart_type, ("", ""))
+                st.warning(f"⚠️ {e}")
+                st.info(f"💡 请检查左侧「数据格式要求」，确认列名与要求一致。\n\n**{chart_type}示例数据：**")
+                st.code(hint_example, language="csv")
             except Exception as e:
                 logger.exception("Chart render error")
                 st.error(f"❌ 绘制失败：{e}")
