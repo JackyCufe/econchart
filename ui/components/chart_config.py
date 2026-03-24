@@ -106,8 +106,8 @@ def render_scatter_config(df: Optional[pd.DataFrame]) -> dict[str, Any]:
     cols = _col_options(df)
     num_cols = _col_options(df, numeric_only=True)
 
-    x_col = st.selectbox("X 轴列", cols, key="scatter_x")
-    y_col = st.selectbox("Y 轴列", cols, key="scatter_y")
+    x_col = st.selectbox("X 轴列", num_cols if num_cols else cols, key="scatter_x")
+    y_col = st.selectbox("Y 轴列", num_cols if num_cols else cols, key="scatter_y")
     color_col = st.selectbox("分组着色列（可选）", ["（无）"] + cols, key="scatter_color")
     size_col = st.selectbox("气泡大小列（可选）", ["（无）"] + num_cols, key="scatter_size")
 
