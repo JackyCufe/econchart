@@ -36,6 +36,11 @@ def _load_css() -> None:
 
 def _render_nav() -> str:
     """渲染顶部导航，返回当前选中页面名称。"""
+    PAGES = ["🏠 首页", "📐 图表编辑器"]
+    # 支持通过 session_state["_nav_jump"] 在渲染前跳转
+    jump = st.session_state.pop("_nav_jump", None)
+    default_index = PAGES.index(jump) if jump in PAGES else 0
+
     col_logo, col_nav = st.columns([1, 3])
     with col_logo:
         st.markdown(
@@ -46,7 +51,8 @@ def _render_nav() -> str:
     with col_nav:
         page = st.radio(
             "nav",
-            ["🏠 首页", "📐 图表编辑器"],
+            PAGES,
+            index=default_index,
             horizontal=True,
             label_visibility="collapsed",
             key="main_nav",

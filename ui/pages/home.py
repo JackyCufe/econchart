@@ -84,7 +84,7 @@ def render_home() -> None:
     col_btn = st.columns([1, 2, 1])[1]
     with col_btn:
         if st.button("🎨 开始制图 →", use_container_width=True, type="primary"):
-            st.session_state["main_nav"] = "📐 图表编辑器"
+            st.session_state["_nav_jump"] = "📐 图表编辑器"
             st.rerun()
 
     st.divider()
