@@ -152,13 +152,14 @@ def render_studio():
             sample_items = list(SAMPLE_DATA.items())
             for i, (name, sample) in enumerate(sample_items):
                 if sample_cols[i].button(f"📋 示例·{name}", key=f"sample_{name}", use_container_width=True):
+                    # 必须同时写 widget key 和 ec_pasted，否则 rerun 后 text_area 不更新
+                    st.session_state["paste_area"] = sample
                     st.session_state["ec_pasted"] = sample
                     st.session_state["ec_chart"] = name
                     st.rerun()
 
             text = st.text_area(
                 "粘贴数据",
-                value=st.session_state["ec_pasted"],
                 height=160,
                 placeholder="第一行为列名，逗号或 Tab 分隔...",
                 label_visibility="collapsed",
