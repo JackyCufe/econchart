@@ -80,13 +80,19 @@ def render_home() -> None:
     with col_c:
         st.info("**③ 下载图片**\n\n免费获得预览图，升级后导出 300 DPI 无水印版本。")
 
+    st.markdown("")
+    col_btn = st.columns([1, 2, 1])[1]
+    with col_btn:
+        if st.button("🎨 开始制图 →", use_container_width=True, type="primary"):
+            st.session_state["main_nav"] = "📐 图表编辑器"
+            st.rerun()
+
     st.divider()
 
     st.markdown(
         """
         <div style="text-align:center; color:#999; font-size:0.85rem;">
-            EconChart by <a href="https://econkit.com" style="color:#3498DB;">EconKit</a> ·
-            专为中国经管学者设计
+            EconChart · 专为中国经管学者设计
         </div>
         """,
         unsafe_allow_html=True,
