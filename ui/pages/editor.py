@@ -102,7 +102,7 @@ def _render_export_panel(fig: plt.Figure) -> None:
 
 def render_editor() -> None:
     """渲染图表编辑器主页面。"""
-    col_left, col_right = st.columns([1, 2], gap="large")
+    col_left, col_right = st.columns([2, 3], gap="large")
 
     with col_left:
         # ① 图类型选择
