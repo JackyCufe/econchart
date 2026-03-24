@@ -90,10 +90,15 @@ def render_data_input(chart_type: str = "系数图") -> Optional[pd.DataFrame]:
     - 数据预览表格
     """
     st.markdown("### 📋 数据输入")
-    st.caption("支持粘贴 CSV（逗号/Tab 分隔）或上传文件")
-    if st.button("📂 加载示例数据", key="btn_sample", use_container_width=True):
-        sample = SAMPLE_DATA.get(chart_type, COEF_SAMPLE)
-        st.session_state["pasted_data"] = sample
+
+    # 示例数据按钮
+    col_hint, col_sample = st.columns([3, 1])
+    with col_hint:
+        st.caption("支持粘贴 CSV（逗号/Tab 分隔）或上传文件")
+    with col_sample:
+        if st.button("加载示例", key="btn_sample", use_container_width=True):
+            sample = SAMPLE_DATA.get(chart_type, COEF_SAMPLE)
+            st.session_state["pasted_data"] = sample
 
     tab_paste, tab_upload = st.tabs(["📝 粘贴数据", "📁 上传文件"])
 
