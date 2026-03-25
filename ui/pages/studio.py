@@ -143,7 +143,8 @@ def render_studio():
         return st.session_state["ec_chart"]
 
     # ── Step 1: 数据输入 ───────────────────────────────────────────────────────
-    with st.expander("① 数据输入", expanded=(get_df() is None)):
+    # expanded 始终为 False（有无数据都收起），避免展开→收起高度突变导致 CLS
+    with st.expander("① 数据输入", expanded=False):
         tab_paste, tab_upload = st.tabs(["📝 粘贴 CSV", "📁 上传文件"])
 
         with tab_paste:
