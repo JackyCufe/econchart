@@ -291,10 +291,21 @@ def render_studio():
             config = {}
 
     with col_preview:
+        # 预览区固定最小高度，防止图表渲染前后高度跳变
+        st.markdown(
+            "<style>"
+            "div[data-testid='stVerticalBlock'] > div[data-testid='column']:last-child {"
+            "  min-height: 420px;"
+            "}"
+            "</style>",
+            unsafe_allow_html=True,
+        )
+        preview_slot = st.empty()
         with st.spinner("绘制中..."):
             try:
                 fig = _build_chart(chart_type, df, config, theme_name)
-                st.pyplot(fig, use_container_width=True)
+                with preview_slot.container():
+                    st.pyplot(fig, use_container_width=True)
                 plt.close(fig)
 
                 # 导出区
