@@ -129,3 +129,61 @@ hr {
 .css-1d391kg {
     display: none;
 }
+
+/* ── 深度反抖动（2026-03-25 实测补丁）──────────────────────────
+ * 实测 CLS 0.14，9次 layout shift，主因：
+ *   - stMainBlockContainer 图表渲染后高度突变
+ *   - expander 展开/折叠时内容区高度跳变
+ *   - 图表预览列（col_preview）从空到有内容
+ */
+html {
+    overflow-anchor: none !important;
+    scroll-behavior: auto !important;
+}
+
+div[data-testid="stMainBlockContainer"] {
+    contain: layout style !important;
+    will-change: transform;
+    min-height: 80vh;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    contain: layout;
+    overflow-anchor: none;
+}
+
+/* 图表区域占位：防止从 0 跳出 */
+div[data-testid="stPlotlyChart"],
+div.js-plotly-plot,
+div[data-testid="stImage"] {
+    min-height: 300px;
+    overflow-anchor: none;
+}
+
+/* expander 稳定 */
+div[data-testid="stExpander"] {
+    overflow-anchor: none;
+}
+
+/* column 容器防塌缩 */
+div[data-testid="column"] {
+    overflow-anchor: none;
+    contain: layout;
+}
+
+/* spinner 区域预留 */
+div[data-testid="stSpinner"] {
+    min-height: 48px;
+    overflow-anchor: none;
+}
+
+/* 全局 overflow-anchor 关闭 */
+* {
+    overflow-anchor: none;
+}
+
+/* ── EconChart 预览列最小高度（防图表渲染前高度跳变）──────────── */
+/* 用属性选择器 + :last-child 定位右侧预览列 */
+div[data-testid="stHorizontalBlock"] > div[data-testid="column"]:last-child {
+    min-height: 420px;
+}
