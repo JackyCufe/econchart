@@ -216,10 +216,26 @@ def render_studio():
         if current_df is not None:
             st.info(f"📊 当前数据：{len(current_df):,} 行 × {len(current_df.columns)} 列 — {', '.join(current_df.columns[:5])}{'...' if len(current_df.columns) > 5 else ''}")
 
-    # ── 数据未加载时提示 ───────────────────────────────────────────────────────
+    # ── 数据未加载时：显示固定高度占位区，防止加载后内容从 0 高度跳出（减少 CLS）
     df = get_df()
     if df is None:
-        st.info("⬆️ 请在「① 数据输入」中粘贴或上传数据")
+        st.markdown(
+            """
+            <div style="min-height:480px; display:flex; align-items:center;
+                        justify-content:center; color:#ced4da;
+                        border:2px dashed #dee2e6; border-radius:10px;
+                        margin:1rem 0; flex-direction:column; gap:12px;">
+                <div style="font-size:3rem">📊</div>
+                <div style="font-size:1rem; font-weight:600; color:#adb5bd">
+                    ⬆️ 请在上方「① 数据输入」中粘贴或上传数据
+                </div>
+                <div style="font-size:0.85rem; color:#ced4da">
+                    支持点击「📋 示例·系数图」一键加载示例
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
         return
 
     chart_type = get_chart()
@@ -275,12 +291,6 @@ def render_studio():
             config = {}
 
     with col_preview:
-        # 预留最小高度，防止图表从 0 高度跳出导致 Layout Shift
-        st.markdown(
-            "<style>.ec-preview-placeholder{min-height:400px}</style>"
-            "<div class='ec-preview-placeholder'>",
-            unsafe_allow_html=True,
-        )
         with st.spinner("绘制中..."):
             try:
                 fig = _build_chart(chart_type, df, config, theme_name)
@@ -317,7 +327,6 @@ def render_studio():
             except Exception as e:
                 logger.exception("Chart render error")
                 st.error(f"❌ 绘制失败：{e}")
-        st.markdown("</div>", unsafe_allow_html=True)
 
     # ── 撤销 ──────────────────────────────────────────────────────────────────
     if st.session_state["ec_history"]:
