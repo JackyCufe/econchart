@@ -225,18 +225,18 @@ def render_studio():
 
     chart_type = get_chart()
 
-    # ── Step 2: 图类型选择 ─────────────────────────────────────────────────────
-    with st.expander("② 选择图表类型", expanded=True):
-        cols = st.columns(len(CHART_TYPES))
-        for i, ct in enumerate(CHART_TYPES):
-            is_active = chart_type == ct["name"]
-            label = f"{'✅ ' if is_active else ''}{ct['icon']} {ct['name']}"
-            btn_type = "primary" if is_active else "secondary"
-            if cols[i].button(label, key=f"chart_{i}", use_container_width=True, type=btn_type):
-                st.session_state["ec_chart"] = ct["name"]
-                chart_type = ct["name"]
-                st.rerun()
-        st.caption(next((c["desc"] for c in CHART_TYPES if c["name"] == chart_type), ""))
+    # ── Step 2: 图类型选择（平铺按钮，不用 expander 避免展开/折叠高度跳变）────
+    st.markdown("#### ② 选择图表类型")
+    cols = st.columns(len(CHART_TYPES))
+    for i, ct in enumerate(CHART_TYPES):
+        is_active = chart_type == ct["name"]
+        label = f"{'✅ ' if is_active else ''}{ct['icon']} {ct['name']}"
+        btn_type = "primary" if is_active else "secondary"
+        if cols[i].button(label, key=f"chart_{i}", use_container_width=True, type=btn_type):
+            st.session_state["ec_chart"] = ct["name"]
+            chart_type = ct["name"]
+            st.rerun()
+    st.caption(next((c["desc"] for c in CHART_TYPES if c["name"] == chart_type), ""))
 
     # ── Step 3: 配置 + 预览 ────────────────────────────────────────────────────
     st.markdown("#### ③ 配置与预览")
