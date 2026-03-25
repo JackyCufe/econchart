@@ -154,7 +154,9 @@ def render_studio():
                     try:
                         new_df = _parse_csv_text(sample)
                         _push_history(get_df(), get_chart())
-                        st.session_state["paste_area"] = sample
+                        # 用 _paste_buf 存示例文本，text_area 的 value 参数读它
+                        # （不能直接写 widget key 对应的 session_state，Streamlit 不允许）
+                        st.session_state["_paste_buf"] = sample
                         st.session_state["ec_pasted"] = sample
                         st.session_state["ec_chart"] = name
                         st.session_state["ec_df"] = new_df
@@ -162,12 +164,14 @@ def render_studio():
                     except Exception as e:
                         st.error(f"❌ 示例加载失败：{e}")
 
+            # value 读 _paste_buf，key 用独立的 paste_area_widget
             text = st.text_area(
                 "粘贴数据",
+                value=st.session_state.get("_paste_buf", ""),
                 height=160,
                 placeholder="第一行为列名，逗号或 Tab 分隔...",
                 label_visibility="collapsed",
-                key="paste_area",
+                key="paste_area_widget",
             )
             if st.button("✅ 确认加载", key="btn_confirm_paste", type="primary", use_container_width=True):
                 if text.strip():
@@ -176,6 +180,7 @@ def render_studio():
                         _push_history(get_df(), get_chart())
                         st.session_state["ec_df"] = new_df
                         st.session_state["ec_pasted"] = text
+                        st.session_state["_paste_buf"] = text
                         st.rerun()
                     except Exception as e:
                         st.error(f"❌ {e}")
