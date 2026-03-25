@@ -142,81 +142,82 @@ def render_studio():
     def get_chart():
         return st.session_state["ec_chart"]
 
-    with st.expander("① 数据输入", expanded=(get_df() is None)):
-        tab_paste, tab_upload = st.tabs(["📝 粘贴 CSV", "📁 上传文件"])
+    # ── 数据输入用 fragment 包裹：输入时只刷新此区域，不触发全页 reflow ─────
+    @st.fragment
+    def _data_input_fragment():
+        with st.expander("① 数据输入", expanded=(get_df() is None)):
+            tab_paste, tab_upload = st.tabs(["📝 粘贴 CSV", "📁 上传文件"])
 
-        # ── 粘贴 CSV ──────────────────────────────────────────────────────────
-        with tab_paste:
-            # 示例数据快捷按钮：点击后直接解析并加载，无需再点「确认加载」
-            sample_cols = st.columns(len([k for k in SAMPLE_DATA]))
-            sample_items = list(SAMPLE_DATA.items())
-            for i, (name, sample) in enumerate(sample_items):
-                if sample_cols[i].button(f"📋 示例·{name}", key=f"sample_{name}", use_container_width=True):
-                    try:
-                        new_df = _parse_csv_text(sample)
-                        _push_history(get_df(), get_chart())
-                        st.session_state["paste_area"] = sample
-                        st.session_state["ec_pasted"] = sample
-                        st.session_state["ec_chart"] = name
-                        st.session_state["ec_df"] = new_df   # 直接写入，跳过「确认加载」
-                        st.rerun()
-                    except Exception as e:
-                        st.error(f"❌ 示例加载失败：{e}")
+            with tab_paste:
+                sample_cols = st.columns(len([k for k in SAMPLE_DATA]))
+                sample_items = list(SAMPLE_DATA.items())
+                for i, (name, sample) in enumerate(sample_items):
+                    if sample_cols[i].button(f"📋 示例·{name}", key=f"sample_{name}", use_container_width=True):
+                        try:
+                            new_df = _parse_csv_text(sample)
+                            _push_history(get_df(), get_chart())
+                            st.session_state["paste_area"] = sample
+                            st.session_state["ec_pasted"] = sample
+                            st.session_state["ec_chart"] = name
+                            st.session_state["ec_df"] = new_df
+                            st.rerun(scope="app")
+                        except Exception as e:
+                            st.error(f"❌ 示例加载失败：{e}")
 
-            text = st.text_area(
-                "粘贴数据",
-                height=160,
-                placeholder="第一行为列名，逗号或 Tab 分隔...",
-                label_visibility="collapsed",
-                key="paste_area",
-            )
-            if st.button("✅ 确认加载", key="btn_confirm_paste", type="primary", use_container_width=True):
-                if text.strip():
-                    try:
-                        new_df = _parse_csv_text(text)
-                        _push_history(get_df(), get_chart())
-                        st.session_state["ec_df"] = new_df
-                        st.session_state["ec_pasted"] = text
-                        st.rerun()
-                    except Exception as e:
-                        st.error(f"❌ {e}")
-                else:
-                    st.warning("请先粘贴数据")
+                text = st.text_area(
+                    "粘贴数据",
+                    height=160,
+                    placeholder="第一行为列名，逗号或 Tab 分隔...",
+                    label_visibility="collapsed",
+                    key="paste_area",
+                )
+                if st.button("✅ 确认加载", key="btn_confirm_paste", type="primary", use_container_width=True):
+                    if text.strip():
+                        try:
+                            new_df = _parse_csv_text(text)
+                            _push_history(get_df(), get_chart())
+                            st.session_state["ec_df"] = new_df
+                            st.session_state["ec_pasted"] = text
+                            st.rerun(scope="app")
+                        except Exception as e:
+                            st.error(f"❌ {e}")
+                    else:
+                        st.warning("请先粘贴数据")
 
-        # ── 上传文件 ──────────────────────────────────────────────────────────
-        with tab_upload:
-            uploaded = st.file_uploader(
-                "上传 CSV / Excel",
-                type=["csv", "xlsx", "xls"],
-                label_visibility="collapsed",
-                key="file_upload",
-            )
-            if uploaded is not None:
-                # 用文件名+大小作为 key，避免重复解析同一个文件
-                file_key = f"{uploaded.name}_{uploaded.size}"
-                if st.session_state["ec_upload_key"] != file_key:
-                    try:
-                        new_df = _parse_upload(uploaded)
-                        _push_history(get_df(), get_chart())
-                        st.session_state["ec_df"] = new_df
-                        st.session_state["ec_upload_key"] = file_key
-                        st.success(f"✅ 已加载 {len(new_df):,} 行 × {len(new_df.columns)} 列")
-                        st.dataframe(new_df.head(5), use_container_width=True)
-                    except Exception as e:
-                        st.error(f"❌ 解析失败：{e}")
-                else:
-                    # 同一个文件已加载，显示状态
-                    df_loaded = get_df()
-                    if df_loaded is not None:
-                        st.success(f"✅ 已加载 {len(df_loaded):,} 行 × {len(df_loaded.columns)} 列")
-                        st.dataframe(df_loaded.head(5), use_container_width=True)
+            # ── 上传文件 ──────────────────────────────────────────────────────
+            with tab_upload:
+                uploaded = st.file_uploader(
+                    "上传 CSV / Excel",
+                    type=["csv", "xlsx", "xls"],
+                    label_visibility="collapsed",
+                    key="file_upload",
+                )
+                if uploaded is not None:
+                    file_key = f"{uploaded.name}_{uploaded.size}"
+                    if st.session_state["ec_upload_key"] != file_key:
+                        try:
+                            new_df = _parse_upload(uploaded)
+                            _push_history(get_df(), get_chart())
+                            st.session_state["ec_df"] = new_df
+                            st.session_state["ec_upload_key"] = file_key
+                            st.success(f"✅ 已加载 {len(new_df):,} 行 × {len(new_df.columns)} 列")
+                            st.dataframe(new_df.head(5), use_container_width=True)
+                            st.rerun(scope="app")
+                        except Exception as e:
+                            st.error(f"❌ 解析失败：{e}")
+                    else:
+                        df_loaded = get_df()
+                        if df_loaded is not None:
+                            st.success(f"✅ 已加载 {len(df_loaded):,} 行 × {len(df_loaded.columns)} 列")
+                            st.dataframe(df_loaded.head(5), use_container_width=True)
 
-        # 当前已加载的数据状态
-        current_df = get_df()
-        if current_df is not None:
-            st.info(f"📊 当前数据：{len(current_df):,} 行 × {len(current_df.columns)} 列 — {', '.join(current_df.columns[:5])}{'...' if len(current_df.columns) > 5 else ''}")
+            current_df = get_df()
+            if current_df is not None:
+                st.info(f"📊 当前数据：{len(current_df):,} 行 × {len(current_df.columns)} 列 — {', '.join(current_df.columns[:5])}{'...' if len(current_df.columns) > 5 else ''}")
 
-    # ── 数据未加载时：显示固定高度占位区，防止加载后内容从 0 高度跳出（减少 CLS）
+    _data_input_fragment()
+
+    # ── 数据未加载时提示 ───────────────────────────────────────────────────────
     df = get_df()
     if df is None:
         st.info("⬆️ 请在「① 数据输入」中粘贴或上传数据，或点击「📋 示例·系数图」一键加载")
