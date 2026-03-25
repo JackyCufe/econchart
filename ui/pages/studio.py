@@ -219,23 +219,7 @@ def render_studio():
     # ── 数据未加载时：显示固定高度占位区，防止加载后内容从 0 高度跳出（减少 CLS）
     df = get_df()
     if df is None:
-        # 纯 Streamlit 组件占位（绕过 ModelScope iframe CSS 过滤）
-        # 预渲染「②图表类型选择」行和空预览区，让页面高度与有数据时接近
-        st.info("⬆️ 请在上方「① 数据输入」粘贴数据或点击「📋 示例·系数图」一键加载")
-        # 预渲染图表类型按钮行（与有数据时相同，高度一致）
-        _cols = st.columns(len(CHART_TYPES))
-        for i, ct in enumerate(CHART_TYPES):
-            _cols[i].button(f"{ct['icon']} {ct['name']}", key=f"ph_chart_{i}",
-                            use_container_width=True, disabled=True)
-        # 预渲染左右两列框架
-        _col_cfg, _col_prev = st.columns([2, 3], gap="large")
-        with _col_cfg:
-            st.caption("← 加载数据后此处显示配置项")
-        with _col_prev:
-            st.caption("← 加载数据后此处显示图表预览")
-            # 用空 dataframe 撑高度
-            import pandas as pd
-            st.dataframe(pd.DataFrame(), use_container_width=True, height=300)
+        st.info("⬆️ 请在「① 数据输入」中粘贴或上传数据，或点击「📋 示例·系数图」一键加载")
         return
 
     chart_type = get_chart()
