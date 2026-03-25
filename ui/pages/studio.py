@@ -143,7 +143,7 @@ def render_studio():
         return st.session_state["ec_chart"]
 
     # ── 数据输入用 fragment 包裹：输入时只刷新此区域，不触发全页 reflow ─────
-    @st.fragment
+    # @st.fragment  # disabled: requires streamlit>=1.37
     def _data_input_fragment():
         with st.expander("① 数据输入", expanded=(get_df() is None)):
             tab_paste, tab_upload = st.tabs(["📝 粘贴 CSV", "📁 上传文件"])
@@ -160,7 +160,7 @@ def render_studio():
                             st.session_state["ec_pasted"] = sample
                             st.session_state["ec_chart"] = name
                             st.session_state["ec_df"] = new_df
-                            st.rerun(scope="app")
+                            st.rerun()  # was scope="app"
                         except Exception as e:
                             st.error(f"❌ 示例加载失败：{e}")
 
@@ -178,7 +178,7 @@ def render_studio():
                             _push_history(get_df(), get_chart())
                             st.session_state["ec_df"] = new_df
                             st.session_state["ec_pasted"] = text
-                            st.rerun(scope="app")
+                            st.rerun()  # was scope="app"
                         except Exception as e:
                             st.error(f"❌ {e}")
                     else:
@@ -202,7 +202,7 @@ def render_studio():
                             st.session_state["ec_upload_key"] = file_key
                             st.success(f"✅ 已加载 {len(new_df):,} 行 × {len(new_df.columns)} 列")
                             st.dataframe(new_df.head(5), use_container_width=True)
-                            st.rerun(scope="app")
+                            st.rerun()  # was scope="app"
                         except Exception as e:
                             st.error(f"❌ 解析失败：{e}")
                     else:
