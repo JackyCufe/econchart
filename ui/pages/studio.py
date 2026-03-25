@@ -147,16 +147,21 @@ def render_studio():
 
         # ── 粘贴 CSV ──────────────────────────────────────────────────────────
         with tab_paste:
-            # 示例数据快捷按钮（只显示有示例数据的图类型）
+            # 示例数据快捷按钮：点击后直接解析并加载，无需再点「确认加载」
             sample_cols = st.columns(len([k for k in SAMPLE_DATA]))
             sample_items = list(SAMPLE_DATA.items())
             for i, (name, sample) in enumerate(sample_items):
                 if sample_cols[i].button(f"📋 示例·{name}", key=f"sample_{name}", use_container_width=True):
-                    # 必须同时写 widget key 和 ec_pasted，否则 rerun 后 text_area 不更新
-                    st.session_state["paste_area"] = sample
-                    st.session_state["ec_pasted"] = sample
-                    st.session_state["ec_chart"] = name
-                    st.rerun()
+                    try:
+                        new_df = _parse_csv_text(sample)
+                        _push_history(get_df(), get_chart())
+                        st.session_state["paste_area"] = sample
+                        st.session_state["ec_pasted"] = sample
+                        st.session_state["ec_chart"] = name
+                        st.session_state["ec_df"] = new_df   # 直接写入，跳过「确认加载」
+                        st.rerun()
+                    except Exception as e:
+                        st.error(f"❌ 示例加载失败：{e}")
 
             text = st.text_area(
                 "粘贴数据",
@@ -270,6 +275,12 @@ def render_studio():
             config = {}
 
     with col_preview:
+        # 预留最小高度，防止图表从 0 高度跳出导致 Layout Shift
+        st.markdown(
+            "<style>.ec-preview-placeholder{min-height:400px}</style>"
+            "<div class='ec-preview-placeholder'>",
+            unsafe_allow_html=True,
+        )
         with st.spinner("绘制中..."):
             try:
                 fig = _build_chart(chart_type, df, config, theme_name)
@@ -306,6 +317,7 @@ def render_studio():
             except Exception as e:
                 logger.exception("Chart render error")
                 st.error(f"❌ 绘制失败：{e}")
+        st.markdown("</div>", unsafe_allow_html=True)
 
     # ── 撤销 ──────────────────────────────────────────────────────────────────
     if st.session_state["ec_history"]:
