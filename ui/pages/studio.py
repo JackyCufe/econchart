@@ -221,17 +221,27 @@ def render_studio():
     if df is None:
         st.markdown(
             """
-            <div style="min-height:480px; display:flex; align-items:center;
-                        justify-content:center; color:#ced4da;
-                        border:2px dashed #dee2e6; border-radius:10px;
-                        margin:1rem 0; flex-direction:column; gap:12px;">
-                <div style="font-size:3rem">📊</div>
-                <div style="font-size:1rem; font-weight:600; color:#adb5bd">
-                    ⬆️ 请在上方「① 数据输入」中粘贴或上传数据
-                </div>
-                <div style="font-size:0.85rem; color:#ced4da">
-                    支持点击「📋 示例·系数图」一键加载示例
-                </div>
+            <style>
+            .ec-empty-placeholder {
+                min-height: 480px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                gap: 12px;
+                color: #ced4da;
+                border: 2px dashed #dee2e6;
+                border-radius: 10px;
+                margin: 1rem 0;
+            }
+            .ec-empty-placeholder .big { font-size: 3rem; }
+            .ec-empty-placeholder .main { font-size: 1rem; font-weight: 600; color: #adb5bd; }
+            .ec-empty-placeholder .sub  { font-size: 0.85rem; color: #ced4da; }
+            </style>
+            <div class="ec-empty-placeholder">
+                <div class="big">📊</div>
+                <div class="main">⬆️ 请在上方「① 数据输入」中粘贴或上传数据</div>
+                <div class="sub">支持点击「📋 示例·系数图」一键加载示例</div>
             </div>
             """,
             unsafe_allow_html=True,
@@ -291,15 +301,6 @@ def render_studio():
             config = {}
 
     with col_preview:
-        # 预览区固定最小高度，防止图表渲染前后高度跳变
-        st.markdown(
-            "<style>"
-            "div[data-testid='stVerticalBlock'] > div[data-testid='column']:last-child {"
-            "  min-height: 420px;"
-            "}"
-            "</style>",
-            unsafe_allow_html=True,
-        )
         preview_slot = st.empty()
         with st.spinner("绘制中..."):
             try:

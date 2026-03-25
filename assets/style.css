@@ -181,3 +181,9 @@ div[data-testid="stSpinner"] {
 * {
     overflow-anchor: none;
 }
+
+/* ── EconChart 预览列最小高度（防图表渲染前高度跳变）──────────── */
+/* 用属性选择器 + :last-child 定位右侧预览列 */
+div[data-testid="stHorizontalBlock"] > div[data-testid="column"]:last-child {
+    min-height: 420px;
+}
