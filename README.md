@@ -20,9 +20,11 @@ tags:
 
 # 📊 EconChart
 
+**Academic Chart Beautifier for Chinese Economics & Management Journals**
+
 **专为中国经管类期刊设计的学术图表美化器**
 
-**Academic Chart Beautifier for Chinese Economics & Management Journals**
+No Stata / R / Origin needed | One-click publication-ready charts
 
 无需 Stata / R / Origin | 一键生成符合投稿规范的高质量图表
 
@@ -31,15 +33,73 @@ tags:
 [![Streamlit](https://img.shields.io/badge/Built%20with-Streamlit-red.svg)](https://streamlit.io/)
 [![ModelScope](https://img.shields.io/badge/🤖_Demo-ModelScope-624aff)](https://modelscope.cn/studios/JackyCufe/EconChart)
 
-**🚀 在线体验（无需安装）：**
+**🚀 Live Demo (no install needed):**
 
-[![ModelScope](https://img.shields.io/badge/在线Demo-ModelScope（国内推荐）-624aff?style=for-the-badge)](https://modelscope.cn/studios/JackyCufe/EconChart)
-[![HuggingFace](https://img.shields.io/badge/在线Demo-HuggingFace（国际）-orange?style=for-the-badge)](https://huggingface.co/spaces/JackyCufe/EconChart)
+[![ModelScope](https://img.shields.io/badge/Demo-ModelScope（China）-624aff?style=for-the-badge)](https://modelscope.cn/studios/JackyCufe/EconChart)
+[![HuggingFace](https://img.shields.io/badge/Demo-HuggingFace（Global）-orange?style=for-the-badge)](https://huggingface.co/spaces/JackyCufe/EconChart)
 
-适用期刊：经济研究 / 管理世界 / 中国工业经济 / 金融研究 / 经济学季刊
+Target journals: 经济研究 / 管理世界 / 中国工业经济 / 金融研究 / 经济学季刊
 
 </div>
 
+---
+
+## ✨ Supported Chart Types
+
+| Chart | Description |
+|-------|-------------|
+| 📌 **Coefficient Plot** | Regression result visualization with 95%/90% CI |
+| 📈 **Line Chart** | Time series, trend comparison |
+| 📊 **Bar Chart** | Grouped / stacked bars |
+| 🔵 **Scatter Plot** | With regression fit line |
+| 📦 **Box Plot** | Distribution comparison |
+| 🌡️ **Heatmap** | Correlation matrix visualization |
+| 📉 **Histogram** | Variable distribution analysis |
+
+## 🗞️ Supported Journal Formats
+
+| Journal | Body Font | English Font | Width |
+|---------|-----------|-------------|-------|
+| 经济研究 | SimSun | Times New Roman | 6.5" |
+| 管理世界 | SimHei | Arial | 7.0" |
+| 中国工业经济 | SimSun | Times New Roman | 6.5" |
+| 金融研究 | SimSun | Times New Roman | 6.5" |
+| General Academic | SimHei | DejaVu Sans | 7.0" |
+
+## 🚀 Quick Start
+
+```bash
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+Open http://localhost:8501.
+
+---
+
+## 🔗 Works with EconPrep & EconKit
+
+```
+[EconPrep] Data Cleaning
+      ↓
+[EconKit] Empirical Analysis → Export coefficient table
+      ↓
+[EconChart] Chart Beautification → Submit to journal
+```
+
+The coefficient plot accepts a regression table with `variable / coef / se` columns directly from EconKit output.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Streamlit** ≥ 1.32 — UI framework
+- **matplotlib** ≥ 3.7 — Chart rendering
+- **pandas** ≥ 2.0 — Data processing
+- **scipy** ≥ 1.11 — Statistical computation
+- **Pillow** ≥ 10.0 — Image processing
+
+---
 ---
 
 ## ✨ 支持图类型
@@ -89,45 +149,13 @@ streamlit run app.py
 
 ---
 
-## 📁 项目结构
-
-```
-econchart/
-├── app.py                    # Streamlit 入口
-├── requirements.txt
-├── README.md
-├── assets/
-│   └── style.css             # 自定义样式
-├── core/
-│   ├── font_manager.py       # 中文字体自动检测
-│   ├── theme.py              # 期刊主题定义
-│   └── exporter.py           # 图表导出（PNG/SVG/PDF）
-├── charts/                   # 图表绘制模块（7 种）
-│   ├── coefficient_plot.py
-│   ├── scatter.py
-│   ├── bar.py
-│   ├── line.py
-│   ├── boxplot.py
-│   ├── heatmap.py
-│   └── histogram.py
-└── ui/
-    ├── components/
-    │   ├── data_input.py     # 数据输入（CSV 粘贴 / 上传）
-    │   └── chart_config.py   # 图表参数配置 UI
-    └── pages/
-        ├── home.py           # 首页
-        └── editor.py         # 图表编辑器
-```
-
----
-
 ## 🛠️ 技术栈
 
-- **[Streamlit](https://streamlit.io/)** ≥ 1.32 — 界面框架
-- **[matplotlib](https://matplotlib.org/)** ≥ 3.7 — 图表绘制
-- **[pandas](https://pandas.pydata.org/)** ≥ 2.0 — 数据处理
-- **[scipy](https://scipy.org/)** ≥ 1.11 — 统计计算
-- **[Pillow](https://python-pillow.org/)** ≥ 10.0 — 图片处理
+- **Streamlit** ≥ 1.32 — 界面框架
+- **matplotlib** ≥ 3.7 — 图表绘制
+- **pandas** ≥ 2.0 — 数据处理
+- **scipy** ≥ 1.11 — 统计计算
+- **Pillow** ≥ 10.0 — 图片处理
 
 ### 中文字体自动检测顺序
 
